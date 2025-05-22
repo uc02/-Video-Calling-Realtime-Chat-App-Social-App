@@ -29,16 +29,20 @@ export default function App() {
         ) : (
           <Navigate to={!isAutheticated ? "/login" : "/onboarding"} />
         )} />
-        <Route path="/signup" element={!isAutheticated ? <SignUpPage /> : <Navigate to="/" />} />
-        <Route path="/login" element={!isAutheticated ? <LoginPage /> : <Navigate to="/" />} />
+        <Route path="/signup" element={!isAutheticated ? <SignUpPage /> : <Navigate to={isOnboarded ? "/" : "/ onboarding"
+          } />} />
+        <Route 
+          path="/login"
+          element={!isAutheticated ? <LoginPage /> : <Navigate to={isOnboarded ? "/" : "/onboarding"
+          } />} />
         <Route path="/notification" element={isAutheticated ? <Notification /> : <Navigate to="/login" />} />
         <Route path="/call" element={isAutheticated ? <CallPage /> : <Navigate to="/login" />} />
         <Route path="/chat" element={isAutheticated ? <ChatPage /> : <Navigate to="/login" />} />
         <Route path="/onboarding" element={isAutheticated ? (
-           !isOnboarded ? ( <OnboardingPage/> ) : ( <Navigate to="/"/> )
-           ) : (
-           <Navigate to="/login" />
-          )} />
+          !isOnboarded ? (<OnboardingPage />) : (<Navigate to="/" />)
+        ) : (
+          <Navigate to="/login" />
+        )} />
       </Routes>
 
       <Toaster />
