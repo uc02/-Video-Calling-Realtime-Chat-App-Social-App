@@ -10,7 +10,7 @@ export async function getRecommededUsers(req, res) {
     const recommededUsers = await User.find({
       $and: [
         { _id: { $ne: currentUserId } },
-        { $id: { $nin: currentUser.friends } },
+        { _id: { $nin: currentUser.friends } },
         { isOnboarded: true }
       ]
     })
@@ -64,7 +64,7 @@ export async function sendFriendRequest(req, res) {
        .json({ message: "A friend request already exists between you and this user"})
     }
 
-    const friendRequest = await FriendRequest.creat({
+    const friendRequest = await FriendRequest.create({
       sender: myId,
       recipient: recipientId,
     })
