@@ -1,5 +1,26 @@
 {
   "dependencies": {
     "cookie-parser": "^1.4.7"
-  }
+  },
+  "name": "video-streaming-project_mern",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uc02/-Video-Calling-Realtime-Chat-App-Social-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/uc02/-Video-Calling-Realtime-Chat-App-Social-App/issues"
+  },
+  "homepage": "https://github.com/uc02/-Video-Calling-Realtime-Chat-App-Social-App#readme"
 }

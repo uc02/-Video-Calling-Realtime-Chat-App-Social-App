@@ -69,14 +69,14 @@ export async function login(req, res) {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" })
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ message: "Invalid email or password" });
 
     const isPasswordCorrect = await user.matchPassword(password);
-    if (!isPasswordCorrect) return res.status(401).json({ message: 'Invalid email or password' })
+    if (!isPasswordCorrect) return res.status(401).json({ message: "Invalid email or password" });
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "7d",
@@ -89,63 +89,62 @@ export async function login(req, res) {
       secure: process.env.NODE_ENV === "production",
     });
 
-    res.status(200).json({ success: true, user})
-
+    res.status(200).json({ success: true, user });
   } catch (error) {
-     console.log("Error in login controller", error.message);
-     res.status(500).json({ message: "Internal Server Error" })
+    console.log("Error in login controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
 export function logout(req, res) {
   res.clearCookie("jwt");
-  res.status(200).json({ success: true, message: "Logout successful"})
+  res.status(200).json({ success: true, message: "Logout successful" });
 }
 
-export async function onboard(req,res){
+export async function onboard(req, res) {
   try {
-    const userId = req.user._id
+    const userId = req.user._id;
 
     const { fullName, bio, nativeLanguage, learningLanguage, location } = req.body;
 
-    if(!fullName || !bio || !nativeLanguage || !learningLanguage || !location){
+    if (!fullName || !bio || !nativeLanguage || !learningLanguage || !location) {
       return res.status(400).json({
         message: "All fields are required",
-        missingFields:[
+        missingFields: [
           !fullName && "fullName",
           !bio && "bio",
           !nativeLanguage && "nativeLanguage",
           !learningLanguage && "learningLanguage",
-          !location && "location"
+          !location && "location",
         ].filter(Boolean),
-      })
+      });
     }
 
-    const updatedUser =  await User.findByIdAndUpdate(
-      userId,{
-      ...req.body,
-      isOnboarded: true,
-    },
-    { new: true}
-  )
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        ...req.body,
+        isOnboarded: true,
+      },
+      { new: true }
+    );
 
-    if(!updatedUser) return res.status(404).json({ message:"User not found"})
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
 
-      try {
-        await upsertStreamUser({
-          id: updatedUser._id.toString(),
-          name: updatedUser.fullName,
-          image: updatedUser.profilePic || ""
-        })
-        console.log(`Stream user updated after onboarding for ${updatedUser.fullName}`)
-      } catch (StreamError) {
-        console.log("Error updating Stream user during onboarding:", streamError.message)
-      }
+    try {
+      await upsertStreamUser({
+        id: updatedUser._id.toString(),
+        name: updatedUser.fullName,
+        image: updatedUser.profilePic || "",
+      });
+      console.log(`Stream user updated after onboarding for ${updatedUser.fullName}`);
+    } catch (streamError) {
+      console.log("Error updating Stream user during onboarding:", streamError.message);
+    }
 
-      res.status(200).json({ success: true, user: updatedUser })
+    res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
-    console.error("Onboarding error: ", error)
-    res.status(500).json({ message: "Internal Server Error"})
+    console.error("Onboarding error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
-
